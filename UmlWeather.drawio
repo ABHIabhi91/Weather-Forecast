@@ -1,0 +1,25 @@
+<mxfile host="app.diagrams.net" modified="2023-04-03T17:36:29.775Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15" etag="Q-iayf2ih0b5S0cAM63R" version="21.1.4" type="device">
+  <diagram name="Page-1" id="9uV4BKBxubA_N80hapW0">
+    <mxGraphModel dx="954" dy="624" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Q-oGXQqNiAbcVrzm0xKC-3" value="DayForecast" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="119" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Q-oGXQqNiAbcVrzm0xKC-4" value="+date&lt;br&gt;+highTemp&lt;br&gt;+LowTemp&lt;br&gt;+ List&amp;lt;Prediction&amp;gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="Q-oGXQqNiAbcVrzm0xKC-3">
+          <mxGeometry y="50" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Q-oGXQqNiAbcVrzm0xKC-5" value="Predictions" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="280" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Q-oGXQqNiAbcVrzm0xKC-6" value="+timeDuration&lt;br&gt;+ prediction" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="Q-oGXQqNiAbcVrzm0xKC-5">
+          <mxGeometry y="50" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Q-oGXQqNiAbcVrzm0xKC-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Q-oGXQqNiAbcVrzm0xKC-4" target="Q-oGXQqNiAbcVrzm0xKC-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
