@@ -28,7 +28,9 @@ public class RedisUtility {
 
     public DayForecastDTO getValue(final String key) {
 
-        return gson.fromJson(redisTemplate.opsForValue().get(key), DayForecastDTO.class);
+        DayForecastDTO day = gson.fromJson(redisTemplate.opsForValue().get(key), DayForecastDTO.class);
+        System.out.println("data ...."+day);
+        return day;
     }
 
     public void deleteKeyFromRedis(String key) {

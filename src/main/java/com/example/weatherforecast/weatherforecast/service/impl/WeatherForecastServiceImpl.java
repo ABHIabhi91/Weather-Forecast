@@ -44,9 +44,16 @@ public class WeatherForecastServiceImpl implements WeatherForecastService {
 
         DayForecastDTO dayForecastDTO;
 
-    //     dayForecastDTO = fetchFromRedis(city);
+        System.out.println("Redis key before fetch ...." +city+LocalDate.now());
 
-    //    if(dayForecastDTO == null) {
+        dayForecastDTO = fetchFromRedis(city);
+
+         System.out.println("Redis Data ...." +dayForecastDTO);
+
+
+        if(dayForecastDTO == null) {
+
+            System.out.println("Fething from API");
 
             dayForecastDTO = new DayForecastDTO();
             HttpHeaders headers = new HttpHeaders();
@@ -120,8 +127,10 @@ public class WeatherForecastServiceImpl implements WeatherForecastService {
 
 
             }
-       //     redisUtility.setValue(city+LocalDateTime.now(),dayForecastDTO);
-   //     }
+            redisUtility.setValue(city+LocalDate.now(),dayForecastDTO);
+            System.out.println("Redis key ...." +city+LocalDate.now());
+
+        }
 
         return dayForecastDTO;
 
@@ -129,12 +138,12 @@ public class WeatherForecastServiceImpl implements WeatherForecastService {
 
     @Override
     public DayForecastDTO fetchFromRedis(String city) {
-        DayForecastDTO dto = redisUtility.getValue(city+LocalDateTime.now());
+        DayForecastDTO dto = redisUtility.getValue(city+LocalDate.now());
         return  dto;
     }
 
     private Double convertFahrenheitToCelcius(WeatherDTO weatherDTO) {
-        double celcius = (weatherDTO.getMain().getTemp_max() - 32) / 1.8;
+        double celcius = (weatherDTO.getMain().getTemp_max() - 273) ;
         return celcius;
     }
 
