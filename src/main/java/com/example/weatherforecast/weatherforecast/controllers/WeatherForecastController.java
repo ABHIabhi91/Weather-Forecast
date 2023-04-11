@@ -25,7 +25,6 @@ public class WeatherForecastController {
 
         DayForecastDTO dayForecastDTO = weatherForecastService.getWeatherInfo(city);
 
-
         return ResponseEntity.ok(dayForecastDTO);
     }
 

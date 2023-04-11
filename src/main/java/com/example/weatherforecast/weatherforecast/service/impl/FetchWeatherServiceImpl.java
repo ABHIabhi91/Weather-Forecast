@@ -40,7 +40,7 @@ public class FetchWeatherServiceImpl implements FetchWeatherService {
 
 
         String urlTemplate = UriComponentsBuilder.fromHttpUrl(url)
-                //.queryParam("q", city)
+                .queryParam("q", city)
                 .queryParam("appid", appId)
                 .queryParam("cnt", 24)
                 .encode()
