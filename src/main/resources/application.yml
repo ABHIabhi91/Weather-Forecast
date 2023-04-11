@@ -1,0 +1,25 @@
+resilience4j.circuitbreaker:
+  instances:
+    myProjectAllRemoteCallsCB:
+      eventConsumerBufferSize: 10
+      registerHealthIndicator: true
+      slidingWindowSize: 5
+      slidingWindowType: COUNT_BASED
+      permittedNumberOfCallsInHalfOpenState: 2
+      minimumNumberOfCalls: 10
+      waitDurationInOpenState: 50s
+      slowCallRateThreshold: 50
+      slowCallDurationThreshold: 50
+      failureRateThreshold: 50
+
+management:
+  endpoint:
+    health:
+      show-details: always
+    web:
+      exposure:
+        include: "*"
+
+management.health.circuitbreakers.enabled: true
+
+

@@ -3,17 +3,22 @@ package com.example.weatherforecast.weatherforecast.service.impl;
 import com.example.weatherforecast.weatherforecast.builder.PredicateCreationalBuilder;
 import com.example.weatherforecast.weatherforecast.dto.WeatherDTO;
 import com.example.weatherforecast.weatherforecast.dto.WeatherForecastResponseDTO;
+import com.example.weatherforecast.weatherforecast.exception.CityNotFoundException;
 import com.example.weatherforecast.weatherforecast.model.DayForecast;
 import com.example.weatherforecast.weatherforecast.model.DayForecastDTO;
 import com.example.weatherforecast.weatherforecast.model.Prediction;
+import com.example.weatherforecast.weatherforecast.service.FetchWeatherService;
 import com.example.weatherforecast.weatherforecast.service.PredictionBuilder;
 import com.example.weatherforecast.weatherforecast.service.RedisUtility;
 import com.example.weatherforecast.weatherforecast.service.WeatherForecastService;
 import com.example.weatherforecast.weatherforecast.utility.Utility;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,6 +42,8 @@ public class WeatherForecastServiceImpl implements WeatherForecastService {
     @Autowired
     private RedisUtility redisUtility;
 
+    @Autowired
+    private FetchWeatherService fetchWeatherService;
 
     @Override
     public DayForecastDTO getWeatherInfo(String city) {
@@ -49,7 +56,8 @@ public class WeatherForecastServiceImpl implements WeatherForecastService {
 
             dayForecastDTO = new DayForecastDTO();
 
-            HttpEntity<WeatherForecastResponseDTO> responseEntity = fetchFromAPI(city);
+
+            HttpEntity<WeatherForecastResponseDTO> responseEntity = fetchWeatherService.fetchFromAPI(city);
 
             if (responseEntity != null && responseEntity.getBody() != null) {
                 for (WeatherDTO weatherDTO : responseEntity.getBody().getList()) {
@@ -117,15 +125,18 @@ public class WeatherForecastServiceImpl implements WeatherForecastService {
     }
 
 
-    private HttpEntity<WeatherForecastResponseDTO> fetchFromAPI(String city) {
+    public HttpEntity<WeatherForecastResponseDTO> fetchFromAPI(String city) {
 
         HttpHeaders headers = new HttpHeaders();
 
+        ResponseEntity<WeatherForecastResponseDTO> responseEntity = null;
 
         HttpEntity<String> entity = new HttpEntity<String>(headers);
 
 
-        String urlTemplate = UriComponentsBuilder.fromHttpUrl(url)
+        // try {
+
+        String urlTemplate = UriComponentsBuilder.fromHttpUrl("http://localhost:8000/api.openweathermap.org/data/2.5/forecast")
                 .queryParam("q", city)
                 .queryParam("appid", appId)
                 .queryParam("cnt", 24)
@@ -133,8 +144,18 @@ public class WeatherForecastServiceImpl implements WeatherForecastService {
                 .toUriString();
 
 
-        HttpEntity<WeatherForecastResponseDTO> responseEntity = restTemplate.exchange(urlTemplate, HttpMethod.GET, entity, WeatherForecastResponseDTO.class);
+        responseEntity = restTemplate.exchange(urlTemplate, HttpMethod.GET, entity, WeatherForecastResponseDTO.class);
 
+//        }  catch (HttpClientErrorException | HttpServerErrorException e ) {
+//            throw new CityNotFoundException(city);
+//        }
         return responseEntity;
     }
+
+//    public String  getAPIFallBack(String topicPage, Exception e){
+//        System.out.println("getAPIFallBack::{}" + e.getMessage() +topicPage);
+//
+//        return topicPage;
+//    }
+
 }

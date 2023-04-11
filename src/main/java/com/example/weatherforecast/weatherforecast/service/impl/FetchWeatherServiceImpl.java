@@ -1,7 +1,10 @@
-package com.example.weatherforecast.weatherforecast.utility;
-
+package com.example.weatherforecast.weatherforecast.service.impl;
 
 import com.example.weatherforecast.weatherforecast.dto.WeatherForecastResponseDTO;
+import com.example.weatherforecast.weatherforecast.exception.CityNotFoundException;
+import com.example.weatherforecast.weatherforecast.exception.ServiceNotFoundException;
+import com.example.weatherforecast.weatherforecast.model.DayForecastDTO;
+import com.example.weatherforecast.weatherforecast.service.FetchWeatherService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,11 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @Service
-public class Utility {
+
+public class FetchWeatherServiceImpl implements FetchWeatherService {
 
     @Value("${url}")
     private String url;
@@ -27,17 +28,10 @@ public class Utility {
 
     @Autowired
     private RestTemplate restTemplate;
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public static LocalDateTime convertStringLocalDate(String date) {
-        LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
-        return dateTime;
-    }
-
-
+    @Override
     @CircuitBreaker(name = "myProjectAllRemoteCallsCB", fallbackMethod = "getAPIFallBack")
     public HttpEntity<WeatherForecastResponseDTO> fetchFromAPI(String city) {
-
         HttpHeaders headers = new HttpHeaders();
 
         ResponseEntity<WeatherForecastResponseDTO> responseEntity = null;
@@ -45,10 +39,8 @@ public class Utility {
         HttpEntity<String> entity = new HttpEntity<String>(headers);
 
 
-        // try {
-
-        String urlTemplate = UriComponentsBuilder.fromHttpUrl("https://api.openweathermap.org/data/2.5/forecast")
-                .queryParam("q", city)
+        String urlTemplate = UriComponentsBuilder.fromHttpUrl(url)
+                //.queryParam("q", city)
                 .queryParam("appid", appId)
                 .queryParam("cnt", 24)
                 .encode()
@@ -57,16 +49,18 @@ public class Utility {
 
         responseEntity = restTemplate.exchange(urlTemplate, HttpMethod.GET, entity, WeatherForecastResponseDTO.class);
 
-//        }  catch (HttpClientErrorException | HttpServerErrorException e ) {
-//            throw new CityNotFoundException(city);
-//        }
+
         return responseEntity;
     }
 
-
-    public String  getAPIFallBack(String topicPage, Exception e){
-        System.out.println("getAPIFallBack::{}" + e.getMessage() +topicPage);
-
-            return topicPage;
+    public ResponseEntity<DayForecastDTO>  getAPIFallBack(String city, Throwable e){
+        if(e.getMessage().contains("city not found"))
+        {
+            throw new CityNotFoundException(city);
+        }
+        else {
+            throw new ServiceNotFoundException("Service is down kindly retry after some time");
+        }
     }
+
 }

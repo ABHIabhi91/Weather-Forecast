@@ -2,6 +2,7 @@ package com.example.weatherforecast.weatherforecast.controllers;
 
 import com.example.weatherforecast.weatherforecast.model.DayForecastDTO;
 import com.example.weatherforecast.weatherforecast.service.WeatherForecastService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
