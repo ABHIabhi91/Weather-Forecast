@@ -22,7 +22,8 @@ public class WeatherForecastController {
     @GetMapping(path="/{city}")
     public ResponseEntity<DayForecastDTO> getWeatherStatus(@PathVariable("city") String city ){
 
-        DayForecastDTO dayForecastDTO = weatherForecastService.getForecast(city);
+        DayForecastDTO dayForecastDTO = weatherForecastService.getWeatherInfo(city);
+
 
         return ResponseEntity.ok(dayForecastDTO);
     }
