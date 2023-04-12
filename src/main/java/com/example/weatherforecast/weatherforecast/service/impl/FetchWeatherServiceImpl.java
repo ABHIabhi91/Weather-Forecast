@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Base64;
+
 @Service
 
 public class FetchWeatherServiceImpl implements FetchWeatherService {
@@ -41,7 +43,7 @@ public class FetchWeatherServiceImpl implements FetchWeatherService {
 
         String urlTemplate = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("q", city)
-                .queryParam("appid", appId)
+                .queryParam("appid", decodeString(appId))
                 .queryParam("cnt", 24)
                 .encode()
                 .toUriString();
@@ -53,14 +55,18 @@ public class FetchWeatherServiceImpl implements FetchWeatherService {
         return responseEntity;
     }
 
-    public ResponseEntity<DayForecastDTO>  getAPIFallBack(String city, Throwable e){
-        if(e.getMessage().contains("city not found"))
-        {
+    public ResponseEntity<DayForecastDTO> getAPIFallBack(String city, Throwable e) {
+        if (e.getMessage().contains("city not found")) {
             throw new CityNotFoundException(city);
-        }
-        else {
+        } else {
             throw new ServiceNotFoundException("Service is down kindly retry after some time");
         }
     }
 
+    private String decodeString(String encodedString) {
+
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
+        String decodedString = new String(decodedBytes);
+        return decodedString;
+    }
 }
